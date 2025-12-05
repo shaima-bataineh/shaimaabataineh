@@ -47,6 +47,7 @@
         bottom: 50px;
         left: 175px;
         border-radius: 10px;
+        z-index: 2;
     }
 
     .obstacle {
@@ -56,6 +57,20 @@
         background-color: #222;
         top: -50px;
         border-radius: 5px;
+        z-index: 1;
+    }
+
+    #collisionLabel {
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 250px;
+        font-size: 28px;
+        font-weight: bold;
+        color: yellow;
+        text-shadow: 2px 2px 5px black;
+        display: none;
+        z-index: 3;
     }
 
     button {
@@ -72,13 +87,6 @@
     button:hover {
         background-color: #45a049;
     }
-
-    #message {
-        font-size: 20px;
-        color: red;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
 </style>
 </head>
 <body>
@@ -87,9 +95,8 @@
     <div class="lane lane1"></div>
     <div class="lane lane2"></div>
     <div class="car" id="playerCar"></div>
+    <div id="collisionLabel">أوبس! لقد اصطدمت. أعد المحاولة</div>
 </div>
-
-<div id="message"></div>
 
 <div>
     <button id="startBtn">ابدأ اللعبة</button>
@@ -100,7 +107,7 @@
 <script>
     const playerCar = document.getElementById('playerCar');
     const gameArea = document.getElementById('gameArea');
-    const message = document.getElementById('message');
+    const collisionLabel = document.getElementById('collisionLabel');
 
     const laneWidth = 133; 
     let carPosition = 175; 
@@ -111,7 +118,7 @@
 
     function startGame() {
         if (running) return;
-        message.textContent = '';
+        collisionLabel.style.display = 'none';
         obstacles.forEach(obs => obs.remove());
         obstacles = [];
         carPosition = 175;
@@ -166,7 +173,7 @@
             const obs = obstacles[i];
             obs.style.top = (obs.offsetTop + gameSpeed) + 'px';
 
-            
+           
             if(
                 playerCar.offsetLeft < obs.offsetLeft + obs.offsetWidth &&
                 playerCar.offsetLeft + playerCar.offsetWidth > obs.offsetLeft &&
@@ -187,7 +194,7 @@
     function stopCollision() {
         clearInterval(gameInterval);
         running = false;
-        message.textContent = 'أوبس! لقد اصطدمت. أعد المحاولة';
+        collisionLabel.style.display = 'block';
     }
 
     document.getElementById('startBtn').addEventListener('click', startGame);
